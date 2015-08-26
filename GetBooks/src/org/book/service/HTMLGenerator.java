@@ -11,8 +11,8 @@ import java.util.List;
 
 public class HTMLGenerator {
 
-	private String path;
-	
+	private String genFilePath;
+		
 //	private StringBuilder stringBuilder = new StringBuilder();
 	
 	private List<String> divStringList = new ArrayList<String>();
@@ -22,7 +22,7 @@ public class HTMLGenerator {
 
 	public HTMLGenerator(String path) {
 		super();
-		this.path = path;
+		this.genFilePath = path;
 	}
 
 	public List<String> getDivStringList() {
@@ -30,12 +30,13 @@ public class HTMLGenerator {
 	}
 
 	public String getPath () {
-		return path;
+		return genFilePath;
 	}
 
 	public void setPath(String path) {
-		this.path = path;
+		this.genFilePath = path;
 	}
+	
 	
 	private void generateBody(BufferedWriter writer) throws IOException {
 		writer.write("<body>");
@@ -49,7 +50,7 @@ public class HTMLGenerator {
 	}
 	
 	public void action() throws IOException {
-		File file = new File(this.path);
+		File file = new File(this.genFilePath);
 		
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
 		
@@ -60,5 +61,21 @@ public class HTMLGenerator {
 		bufferedWriter.close();
 		
 		Desktop.getDesktop().browse(file.toURI());
+	}
+	
+	public void addBook(Book book) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<div>");
+		sb.append("<input type=\"checkbox\" name=\"choose\" style=\"width:30px;height:30px\">Choose This<br>");
+		sb.append(book.getDivTitle());
+		sb.append("<br>");
+		sb.append(book.getDivIntr());
+		sb.append("<br>");
+		for(String url: book.getUrls()) {
+			sb.append(url);
+			sb.append("<br>");
+		}
+		sb.append("</div>");
+		this.divStringList.add(sb.toString());
 	}
 }
