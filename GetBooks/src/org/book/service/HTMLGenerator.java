@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class HTMLGenerator {
@@ -16,8 +17,8 @@ public class HTMLGenerator {
 //	private StringBuilder stringBuilder = new StringBuilder();
 	
 	private List<String> divStringList = new ArrayList<String>();
-
-
+	
+	private int id = 1;
 
 
 	public HTMLGenerator(String path) {
@@ -57,6 +58,8 @@ public class HTMLGenerator {
 		bufferedWriter.write("<html>");
 		bufferedWriter.write("<meta charset=\"UTF-8\">");
 		bufferedWriter.newLine();
+		bufferedWriter.write("<script src=\"utility.js\"></script>");
+		bufferedWriter.newLine();
 		generateBody(bufferedWriter);
 		bufferedWriter.close();
 		
@@ -66,15 +69,17 @@ public class HTMLGenerator {
 	public void addBook(Book book) {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<div>");
-		sb.append("<input type=\"checkbox\" name=\"choose\" style=\"width:30px;height:30px\">Choose This<br>");
+		sb.append(String.format("<input class=\"%05d\" onclick=\"onCheck(this)\" type=\"checkbox\" name=\"choose\" style=\"width:30px;height:30px\">Choose This<br>", this.id));
 		sb.append(book.getDivTitle());
 		sb.append("<br>");
 		sb.append(book.getDivIntr());
 		sb.append("<br>");
+		sb.append(String.format("<div class=\"%05d\">", this.id++));
 		for(String url: book.getUrls()) {
 			sb.append(url);
 			sb.append("<br>");
 		}
+		sb.append("</div>");
 		sb.append("</div>");
 		this.divStringList.add(sb.toString());
 	}
