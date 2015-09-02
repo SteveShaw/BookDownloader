@@ -63,7 +63,6 @@ public class HTMLParser {
 
 					String url = href.attr("href");
 					if(urlPat.matcher(url).matches()){
-						System.out.println(url);
 						href.text(url);
 						book.addUrl(href.toString());
 					}

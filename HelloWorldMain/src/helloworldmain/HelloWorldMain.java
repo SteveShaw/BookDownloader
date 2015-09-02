@@ -2,7 +2,7 @@ package helloworldmain;
 
 
 import java.io.File;
-import java.security.GuardedObject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -10,27 +10,22 @@ import java.util.regex.Pattern;
 
 import org.w3c.dom.Element;
 
-import com.sun.javafx.jmx.MXNodeAlgorithmContext;
-import com.sun.prism.paint.Color;
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;;
+import javafx.stage.Stage;
+
 
 public class HelloWorldMain extends Application {
 
@@ -38,7 +33,7 @@ public class HelloWorldMain extends Application {
 	
 	private Pattern urlPat = null;
 	
-	private static final File startDirectory = new File("C:/");
+	private BookService bookService = new BookService();
 	
 	private List<String> getLinks(Pattern pattern, String src) {
 		
@@ -71,14 +66,15 @@ public class HelloWorldMain extends Application {
 		GridPane gridPane = new GridPane();
 		gridPane.setPadding(new Insets(5,5,5,5));
 		
-		StringBuilder urlBuilder = new StringBuilder();
-		urlBuilder.append("file:////");
-		urlBuilder.append("c:/dev/test/demo.html");
+//		StringBuilder urlBuilder = new StringBuilder();
+//		urlBuilder.append("file:////");
+//		urlBuilder.append("c:/dev/test/demo.html");
 		
 		WebView webView = new WebView();
 		webView.setMinWidth(1000);
 		webView.setMinHeight(800);
-		webView.getEngine().load(urlBuilder.toString());
+		
+//		webView.getEngine().load(urlBuilder.toString());
 		
 		
 		
@@ -93,8 +89,8 @@ public class HelloWorldMain extends Application {
 		
 		
 		
-		Button btn = new Button();
-		btn.setText("Save");
+		Button btnSave = new Button();
+		btnSave.setText("Save");
 		
 		Button btnOpen = new Button();
 		btnOpen.setText("Open");
@@ -102,15 +98,17 @@ public class HelloWorldMain extends Application {
 		
 		
 		//gridPane.getChildren().addAll(webView,btn);
-		hbox.getChildren().addAll(btnOpen,btn);
+		hbox.getChildren().addAll(btnOpen,btnSave);
 		
 //		GridPane.setHalignment(hbox, HPos.CENTER);
 //		GridPane.setHgrow(hbox, Priority.ALWAYS);
 		gridPane.add(webView, 0, 0);
 		gridPane.add(hbox, 1, 0);
+		
+		
 				
 	
-		btn.setOnAction(new EventHandler<ActionEvent>() {
+		btnSave.setOnAction(new EventHandler<ActionEvent>() {
 			
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -136,12 +134,24 @@ public class HelloWorldMain extends Application {
 			public void handle(ActionEvent arg0) {
 				DirectoryChooser chooser = new DirectoryChooser();
 				chooser.setTitle("Select Book Pages Directory");
-			
-				chooser.setInitialDirectory(startDirectory);
-				
+						
 				File selectDirectory = chooser.showDialog(primary);
 				
-				System.out.println(selectDirectory.getName());
+				if(selectDirectory!=null) {
+					
+					bookService.setPath(selectDirectory.getAbsolutePath());
+					try {
+						bookService.action();
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					StringBuilder urlBuilder = new StringBuilder();
+					urlBuilder.append("file:////");
+					urlBuilder.append(bookService.getHtmlPath());
+					webView.getEngine().load(urlBuilder.toString());
+				}
 			}
 		});
 //		

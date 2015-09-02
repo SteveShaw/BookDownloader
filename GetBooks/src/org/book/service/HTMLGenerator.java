@@ -58,12 +58,20 @@ public class HTMLGenerator {
 		bufferedWriter.write("<html>");
 		bufferedWriter.write("<meta charset=\"UTF-8\">");
 		bufferedWriter.newLine();
+		bufferedWriter.write("<div>");
+		bufferedWriter.newLine();
+		bufferedWriter.write("<h2>Selected Books</h2>");
+		bufferedWriter.newLine();
+		bufferedWriter.write("<p id=\"urls\"></p>");
+		bufferedWriter.newLine();
+		bufferedWriter.write("</div>");
+		bufferedWriter.newLine();
 		bufferedWriter.write("<script src=\"utility.js\"></script>");
 		bufferedWriter.newLine();
 		generateBody(bufferedWriter);
 		bufferedWriter.close();
 		
-		Desktop.getDesktop().browse(file.toURI());
+		//Desktop.getDesktop().browse(file.toURI());
 	}
 	
 	public void addBook(Book book) {
